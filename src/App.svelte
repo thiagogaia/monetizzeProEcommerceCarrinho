@@ -1,46 +1,43 @@
 <script>
-  import svelteLogo from './assets/svelte.svg'
-  import Counter from './lib/Counter.svelte'
+  /* let watchButton = document.getElementsByClassName('monetizzeEcommercePro')
+  
+  let addProduct = function() {
+    let attribute = this.getAttribute("data-name");
+    alert(attribute);
+  }
+
+  for (let i = 0; i < watchButton.length; i++) {
+    watchButton[i].addEventListener('click', addProduct, false);
+  } */
+
+  import dataProducts from './data/products'
+  import clickOutside from './lib/clickOutside'
+  import { cart } from './lib/cart'
+    import CartPopUp from './components/CartPopUp.svelte';
+  // console.log(cart)
+  function addProduct(event) {
+    /* let attribute = this.getAttribute("data-name");
+    alert(attribute); */
+    let element = event.target
+    let buttonData = event.target.dataset
+    let reference = buttonData.reference
+
+    let product = dataProducts.find(product => product.codigo == reference)
+    if (!product) {
+      return
+    }
+
+    cart.add(product)
+    // console.log(cart);
+  }
 </script>
-
-<main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer"> 
-      <img src="/vite.svg" class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer"> 
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-  <h1>Vite + Svelte</h1>
-
-  <div class="card">
-    <Counter />
-  </div>
-
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
-</main>
+<pre>
+{JSON.stringify($cart, null, 2)}
+</pre>
+<div use:clickOutside={addProduct}>
+  <CartPopUp />
+</div>
 
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
-  }
+  
 </style>
