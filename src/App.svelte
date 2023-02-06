@@ -56,8 +56,8 @@
 		showSlide = true;
 	}
 
-  function desappearSlide() {
-    console.log('desappearSlide')
+  function disappearSlide() {
+    console.log('disappearSlide')
 		showSlide = false;
 	}
 
@@ -107,7 +107,7 @@
           <span class="slider-herader-text">Carrinho</span>
         </div>
 
-        <button class="slider-header-item-button" on:click={desappearSlide}>
+        <button class="slider-header-item-button" on:click={disappearSlide}>
           {@html closeIcon}
         </button>
       </div>
