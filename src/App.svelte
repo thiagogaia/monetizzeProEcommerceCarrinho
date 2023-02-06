@@ -65,7 +65,7 @@
     console.log('finish order')
   }
 </script>
-<pre>
+<pre style="width: 100%; overflow: auto;">
 {JSON.stringify($cart, null, 2)}
 </pre>
 <div use:clickOutside={addProduct}>
