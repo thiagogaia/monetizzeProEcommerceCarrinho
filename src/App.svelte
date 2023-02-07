@@ -15,7 +15,11 @@
   import clickOutside from './lib/clickOutside'
   import { cart } from './lib/cart'
   import { cartIcon, closeIcon, arrowRightIcon, minusCircleIcon ,plusCircleIcon } from './data/icons'
-  
+  import axios from 'axios'
+  const api = axios.create({
+    baseURL: 'https://api.monetizze.com.br'
+  })
+
   function addProduct(event) {
     let element = event.target
     let buttonData = event.target.dataset
@@ -41,9 +45,27 @@
 		showSlide = false;
 	}
 
+  function getAccessToken() {
+    let consumerKey = 'x3BMZyQ0UzfbgEbSu0TRUy0sKB1DAAIM'
+    api.get('/2.1/token', {
+      headers: {
+        'X_CONSUMER_KEY': consumerKey,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(function (response) {
+      console.log(response, 'deu');
+    }).catch(function (error) {
+      console.log(error, 'erro')
+    }).finally(function () {
+      console.log('finally')
+    })
+  }
+
   function goFinishOrder() {
     console.log('finish order')
     //pegar o token
+    getAccessToken()
     //enviar os parâmettros
     //redirecionar para a url recebida
   }
