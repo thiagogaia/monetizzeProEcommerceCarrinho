@@ -113,7 +113,20 @@
       </div>
 
       <div class="slider-content">
-        lista de itens
+        {#if $cart.totalItems == 0}
+          <div class="cart-items-empty">
+            Comece a adicionar ítens no carrinho.
+          </div>
+        {:else}
+          <div class="slider-content-cart-items">
+            <div class="cart-items-image">
+              imagem
+            </div>
+            <div class="cart-items-data">
+              Nome | Qty | Preço | Add
+            </div>
+          </div>
+        {/if}
       </div>
       
       <div class="slider-footer-checkout" 
@@ -384,6 +397,18 @@
     -webkit-box-align: start;
     align-items: flex-start;
 	}
+
+  .cart-items-empty {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    /* identical to box height */
+    text-align: center;
+    color: #000000;
+    margin-top: 50%;
+  }
 
   .qty-cart {
     width: 51px;
