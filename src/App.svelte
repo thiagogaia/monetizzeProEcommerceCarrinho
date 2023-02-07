@@ -50,6 +50,19 @@
     <path d="M12.375 4.8125L18.5625 11L12.375 17.1875" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
     `
+
+  let minusCircleIcon = `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 28C22.6274 28 28 22.6274 28 16C28 9.37258 22.6274 4 16 4C9.37258 4 4 9.37258 4 16C4 22.6274 9.37258 28 16 28Z" stroke="#F04465" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M11 16H21" stroke="#F04465" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    `
+
+  let plusCircleIcon = `<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 28C22.6274 28 28 22.6274 28 16C28 9.37258 22.6274 4 16 4C9.37258 4 4 9.37258 4 16C4 22.6274 9.37258 28 16 28Z" stroke="#19DEBE" stroke-width="2" stroke-miterlimit="10"/>
+    <path d="M11 16H21" stroke="#19DEBE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M16 11V21" stroke="#19DEBE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    `
   let showSlide = false
   function appearSlide() {
     console.log('appearSlide')
@@ -64,6 +77,10 @@
   function goFinishOrder() {
     console.log('finish order')
   }
+
+  function formatCurrency(number) {
+		return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(number)
+	}
 </script>
 <pre style="width: 100%; overflow: auto;">
 {JSON.stringify($cart, null, 2)}
@@ -118,14 +135,33 @@
             Comece a adicionar ítens no carrinho.
           </div>
         {:else}
+          {#each $cart.items as item}
           <div class="slider-content-cart-items">
             <div class="cart-items-image">
-              imagem
+              <img src="{item.product.img}" alt="{item.product.nome}" width="88.8" height="109">
             </div>
             <div class="cart-items-data">
-              Nome | Qty | Preço | Add
+              <span class="items-product-name">{item.product.nome}</span>
+              <div class="items-quantity-price">
+                <span class="items-product-quantity">{item.quantity}x</span>
+                <span class="items-product-divider"></span>
+                <span class="items-product-price">{formatCurrency(item.totalPrice)}</span>
+              </div>
+              
+              <div class="buttonHorizontal">
+                <button class="counter-button" on:click={() => cart.del(item.product)}>
+                  {@html minusCircleIcon}
+                </button>
+                <span class="counter-value">{item.quantity}</span>
+                <button class="counter-button" 
+                  on:click={() => cart.add(item.product)}
+                  >
+                  {@html plusCircleIcon}
+                </button>
+              </div>
             </div>
           </div>
+          {/each}
         {/if}
       </div>
       
@@ -410,6 +446,75 @@
     margin-top: 50%;
   }
 
+  .slider-content-cart-items {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 29px;
+    margin-right: 29px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #D5DDE4;
+  }
+
+  .cart-items-image {
+    box-sizing: border-box;
+    width: 111px;
+    height: 111px;
+    border: 1px solid #D5DDE4;
+    border-radius: 6px;
+    padding: 0 11px;
+  }
+
+  .slider-content-cart-items:last-child {
+    border-bottom: 0px;
+  }
+
+  .cart-items-data {
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+  }
+
+  .items-product-name {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 17px;
+    /* identical to box height */
+    color: #0E1837;
+  }
+
+  .items-quantity-price {
+    margin-top: 15px;
+  }
+
+  .items-product-quantity {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #0E1837;
+    
+  }
+
+  .items-product-divider {
+    border: 1px solid #D5DDE4;
+    transform: rotate(90deg);
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+
+  .items-product-price {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #0E1837;
+  }
+
   .qty-cart {
     width: 51px;
     height: 51px;
@@ -480,4 +585,61 @@
     }
 	}
   /* .css Slide */
+
+  /* css counter */
+  .buttonHorizontal {
+    display: flex;
+    font-size: 0.9em;
+    font-weight: 600;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+    flex-shrink: 0;
+    width: 118px;
+    height: 46px;
+    background: #F5F7F9;
+    color: rgb(13, 17, 54);
+    border-radius: 30px;
+    overflow: hidden;
+    margin-top: 16px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+  }
+
+  .counter-value {
+		pointer-events: none;
+	}
+
+  button {
+		-webkit-appearance: button;
+    -webkit-writing-mode: horizontal-tb !important;
+    text-rendering: auto;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    text-align: center;
+    font: 400 13.3333px Arial;
+	}
+
+  .counter-button {
+		background-color: transparent;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    height: 100%;
+    cursor: pointer;
+    color: rgb(73, 74, 87);
+    border-width: initial;
+    border-style: none;
+    border-color: initial;
+    border-image: initial;
+    width: 42px;
+	}
+  /* .css counter */
 </style>
