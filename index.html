@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + Svelte</title>
+    <title>MonetizzeEcommerce-Pro</title>
+    <link href="https://fonts.cdnfonts.com/css/montserrat" rel="stylesheet">
   </head>
   <body>
     <!-- <button class="monetizzeEcommercePro" data-teste="eita krai" data-name="Thiago Gaia" data-phone="(93) 3242324" data-message="Me liga!">me aperta</button> -->
@@ -12,8 +13,39 @@
     <button class="monetizzeEcommercePro" data-reference="1">add Product1</button>
     <button class="monetizzeEcommercePro" data-reference="2">add Product2</button>
     <button class="monetizzeEcommercePro" data-reference="3">add Product3</button>
-    <MonetizzeEcommerce-Pro/>
-    <!-- <div id="app"></div> -->
+    <form action="" name="jForm">
+      <input type="text" name="uri" />
+      <input type="text" name="key" />
+      <button type="submit">enviar</button>
+    </form>
+    <br>
+    <span class="ret">aqui</span>
+    <!-- <MonetizzeEcommerce-Pro/> -->
+    <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+      integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script>
+      $(function(){
+        $('form[name="jForm"]').submit(function(e){
+          e.preventDefault();
+          let uri = $('input[name="uri"]').val();
+          let key = $('input[name="key"]').val();
+          let ret = $('.ret');
+          
+          $.ajax({
+            url: uri,
+            headers: {
+              'Content-Type': 'application/json',
+              'X_CONSUMER_KEY': key,
+            }, 
+            context: document.body
+          }).done(function (resp) {
+            ret.html(JSON.stringify(resp));
+          });
+          
+        });
+      })
+    </script>
   </body>
 </html>

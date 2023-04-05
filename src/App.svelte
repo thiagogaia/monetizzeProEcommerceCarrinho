@@ -1,4 +1,4 @@
-<svelte:options tag="monetizzeecommerce-pro" />
+<!-- <svelte:options tag="monetizzeecommerce-pro" /> -->
 <script>
   /* let watchButton = document.getElementsByClassName('monetizzeEcommercePro')
   
@@ -10,15 +10,31 @@
   for (let i = 0; i < watchButton.length; i++) {
     watchButton[i].addEventListener('click', addProduct, false);
   } */
+  const X_CONSUMER_KEY = "DegJLU5M3uSQAhGTP7cbRH3twbj8COrD"
+  const apiUrl = "http://api.local/2.1"
+  const txtCheckout = "KZC42"
 
+  let bodyRequest = {
+    checkout: txtCheckout,
+    tempo_expiracao: 20000,
+    valor_soma_produtos: 0,
+    valor_desconto: 0,
+    valor_acrescimo: 0,
+    valor_total: 0,
+    bloquear_dados_comprador: false,
+    dados_comprador: {},
+    produtos: []
+  }
+
+  // import { onMount } from 'svelte'
   import dataProducts from './data/products'
   import clickOutside from './lib/clickOutside'
   import { cart } from './lib/cart'
   import { cartIcon, closeIcon, arrowRightIcon, minusCircleIcon ,plusCircleIcon } from './data/icons'
-  import axios from 'axios'
+  /* import axios from 'axios'
   const api = axios.create({
     baseURL: 'https://api.monetizze.com.br'
-  })
+  }) */
 
   function addProduct(event) {
     let element = event.target
@@ -45,27 +61,91 @@
 		showSlide = false;
 	}
 
-  function getAccessToken() {
-    let consumerKey = 'x3BMZyQ0UzfbgEbSu0TRUy0sKB1DAAIM'
-    api.get('/2.1/token', {
-      headers: {
-        'X_CONSUMER_KEY': consumerKey,
-        'Content-Type': 'application/json'
+  async function getAccessToken() {
+    try {
+      let myHeaders = new Headers()
+      myHeaders.append("X_CONSUMER_KEY", X_CONSUMER_KEY)
+      let requestOptions = {
+        method: 'GET',
+        headers: myHeaders
       }
-    })
-    .then(function (response) {
-      console.log(response, 'deu');
-    }).catch(function (error) {
-      console.log(error, 'erro')
-    }).finally(function () {
-      console.log('finally')
-    })
+
+      const response = await fetch(apiUrl + '/token', requestOptions)
+      const resp = await response.json()
+      localStorage.setItem("ecommerce_token", JSON.stringify(resp));
+      // console.log(resp, 'resp')
+      return resp
+    } catch (error) {
+      // console.log(error, 'erro');
+      return {}
+    }
+    
   }
 
-  function goFinishOrder() {
+  async function getCart(token) {
+    try {
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append("TOKEN", token);
+      
+      var raw = JSON.stringify(bodyRequest)
+
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw
+      };
+
+      const response = await fetch(apiUrl + "/ecommerce/checkout", requestOptions)
+      const resp = await response.json()
+
+      return resp
+    } catch (error) {
+      return {}
+    }
+  }
+
+  let isFetching = false
+  async function goFinishOrder() {
+    isFetching = true
     console.log('finish order')
     //pegar o token
-    getAccessToken()
+    let accessToken = await getAccessToken()
+    let token = accessToken.token
+    if (!token) {
+      alert('Não foi possível comunicar com o servidor')
+      isFetching = false
+      return
+    }
+
+    let cartItems = $cart.items
+    let products = []
+    cartItems.forEach(el => {
+      let product = el.product
+      product.quantidade = el.quantity
+      products.push(product)
+    });
+
+    bodyRequest.produtos = products
+    bodyRequest.valor_soma_produtos = $cart.totalPrice
+    bodyRequest.valor_total = $cart.totalPrice
+
+    bodyRequest.valor_soma_produtos.toFixed(2)
+    bodyRequest.valor_total.toFixed(2)
+
+    let respCart = await getCart(token)
+    if (respCart.Error) {
+      alert(respCart.Error)
+      isFetching = false
+      return
+    }
+    console.log(respCart, 'respCart');
+    if (!respCart.url_checkout) {
+      alert('Houve um erro ao efetuar o pedido. Tente novamente em instantes.')
+      isFetching = false
+    }
+
+    window.location.href = respCart.url_checkout
     //enviar os parâmettros
     //redirecionar para a url recebida
   }
@@ -73,8 +153,15 @@
   function formatCurrency(number) {
 		return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(number)
 	}
-</script>
 
+  /* let allMounted = false
+  onMount(() => {
+    allMounted = true
+  }) */
+</script>
+<pre style="width: 100%; overflow: hidden;">
+  {JSON.stringify($cart, null, 2)}
+</pre>
 <div use:clickOutside={addProduct}>
 
   <div on:click={appearSlide}
@@ -158,7 +245,7 @@
       <div class="slider-footer-checkout" 
         on:click={goFinishOrder} 
         on:keyup={goFinishOrder}
-        class:pointer-events-none={$cart.totalItems == 0}>
+        class:pointer-events-none={$cart.totalItems == 0 || isFetching}>
         <div class="" style="display: flex; text-align: -webkit-center;">
           <span class="qty-cart">
             <span class="qty-cart-text">{$cart.totalItems}</span>
@@ -177,7 +264,10 @@
 </div>
 
 <style>
-  @import url('https://fonts.cdnfonts.com/css/montserrat');
+  /* .allContent {
+    display: none;
+  } */
+  /* @import url('https://fonts.cdnfonts.com/css/montserrat'); */
   /* css popup */
   .border-bottom {
 		border-bottom: 1px solid #D5DDE4;
