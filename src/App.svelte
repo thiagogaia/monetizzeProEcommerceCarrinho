@@ -12,7 +12,7 @@
   } */
   const X_CONSUMER_KEY = "DegJLU5M3uSQAhGTP7cbRH3twbj8COrD"
   const apiUrl = "http://api.local/2.1"
-  const txtCheckout = "KZC42"
+  const txtCheckout = "KHF1421"
 
   let bodyRequest = {
     checkout: txtCheckout,
@@ -85,7 +85,6 @@
   async function getCart(token) {
     try {
       var myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
       myHeaders.append("TOKEN", token);
       
       var raw = JSON.stringify(bodyRequest)
@@ -143,8 +142,10 @@
     if (!respCart.url_checkout) {
       alert('Houve um erro ao efetuar o pedido. Tente novamente em instantes.')
       isFetching = false
+      return
     }
 
+    window.localStorage.removeItem('cart')
     window.location.href = respCart.url_checkout
     //enviar os parâmettros
     //redirecionar para a url recebida

@@ -3,8 +3,9 @@ let dataProducts = [
     codigo: 2,
     nome: "Bugatti La Voiture Noire",
     preco: 10.69,
-    descricao: "sem dormir",
+    descricao: "descrição",
     categoria: 2,
+    cupom: "123",
     peso_e_dimensoes: {
       peso: 0.2,
       altura: 20,
@@ -18,8 +19,9 @@ let dataProducts = [
     codigo: 3,
     nome: "W Motors Lykan Hypersport",
     preco: 2.22,
-    descricao: "sem dormir",
+    descricao: "descriçao",
     categoria: 3,
+    cupom: "456",
     peso_e_dimensoes: {
       peso: 0.4,
       altura: 30,
