@@ -2,13 +2,15 @@ function clickOutside(element, callbackFunction) {
   function onClick(event) {
     // let attribute = event.getAttribute("data-name")
     // console.log( event);
-    // console.log(event, element, event.target.className);
-    if (event.target.className !== "monetizzeEcommercePro") {
+    let activeElement = event.srcElement.ownerDocument.activeElement
+    let stringClassName = activeElement.className
+    // console.log(event, element, stringClassName, activeElement, event.target);
+    if (!stringClassName.includes("monetizzeEcommercePro")) {
       return
     }
 
     if (!element.contains(event.target)) {
-      callbackFunction(event)
+      callbackFunction(event, activeElement)
     }
   }
   // console.log(document.body);
