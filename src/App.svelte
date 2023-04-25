@@ -1,4 +1,4 @@
-<!-- <svelte:options tag="monetizzeecommerce-pro" /> -->
+<svelte:options tag="monetizzeecommerce-pro" />
 <script>
   /* let watchButton = document.getElementsByClassName('monetizzeEcommercePro')
   
@@ -36,9 +36,10 @@
     baseURL: 'https://api.monetizze.com.br'
   }) */
 
-  function addProduct(event) {
-    let element = event.target
-    let buttonData = event.target.dataset
+  function addProduct(event, activeElement) {
+    // console.log(activeElement.dataset)
+    let element = activeElement
+    let buttonData = element.dataset
     let reference = buttonData.reference
 
     let product = dataProducts.find(product => product.codigo == reference)
@@ -47,6 +48,7 @@
     }
 
     cart.add(product)
+    showSlide = true
   }
 
   
@@ -160,9 +162,9 @@
     allMounted = true
   }) */
 </script>
-<pre style="width: 100%; overflow: hidden;">
+<!-- <pre style="width: 100%; overflow: hidden;">
   {JSON.stringify($cart, null, 2)}
-</pre>
+</pre> -->
 <div use:clickOutside={addProduct}>
 
   <div on:click={appearSlide}
@@ -251,12 +253,20 @@
           <span class="qty-cart">
             <span class="qty-cart-text">{$cart.totalItems}</span>
           </span>
-          <span class="link-checkout">Comprar agora</span>
+          <span class="link-checkout">Pague agora</span>
         </div>
         <div class="">
           <span class="arrow-right">{@html arrowRightIcon}</span>
         </div>
       </div>
+      
+      <div 
+        on:click={disappearSlide} 
+        on:keyup={disappearSlide} 
+        style="color: rgb(73, 74, 87); margin: 10px auto; padding: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer;">        
+        Continuar Comprando
+      </div>
+     
       
     </div>
   </div>
