@@ -245,27 +245,30 @@
         {/if}
       </div>
       
-      <div class="slider-footer-checkout" 
-        on:click={goFinishOrder} 
-        on:keyup={goFinishOrder}
-        class:pointer-events-none={$cart.totalItems == 0 || isFetching}>
-        <div class="" style="display: flex; text-align: -webkit-center;">
-          <span class="qty-cart">
-            <span class="qty-cart-text">{$cart.totalItems}</span>
-          </span>
-          <span class="link-checkout">Pague agora</span>
+      <div class="slider-footer">
+        <div class="slider-footer-checkout" 
+          on:click={goFinishOrder} 
+          on:keyup={goFinishOrder}
+          class:pointer-events-none={$cart.totalItems == 0 || isFetching}>
+          <div class="" style="display: flex; text-align: -webkit-center;">
+            <span class="qty-cart">
+              <span class="qty-cart-text">{$cart.totalItems}</span>
+            </span>
+            <span class="link-checkout">Pague agora</span>
+          </div>
+          <div class="">
+            <span class="arrow-right">{@html arrowRightIcon}</span>
+          </div>
         </div>
-        <div class="">
-          <span class="arrow-right">{@html arrowRightIcon}</span>
+      
+        <div 
+          on:click={disappearSlide} 
+          on:keyup={disappearSlide} 
+          style="color: rgb(73, 74, 87); padding: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer;">        
+          Continuar Comprando
         </div>
       </div>
       
-      <div 
-        on:click={disappearSlide} 
-        on:keyup={disappearSlide} 
-        style="color: rgb(73, 74, 87); margin: 10px auto; padding: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer;">        
-        Continuar Comprando
-      </div>
      
       
     </div>
@@ -431,7 +434,7 @@
 
 	.slider-content-container {
 		width: 430px;
-    height: 100vh;
+    height: 100dvh;
     min-height: 100vh;
     /* mobile viewport bug fix */
     min-height: -webkit-fill-available;
@@ -629,6 +632,14 @@
     
   }
 
+  .slider-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.8rem 0.8rem 1.72rem 0.8rem;
+    gap: 0.8em;
+  }
+
 	.slider-footer-checkout {
 		display: flex;
     -webkit-box-align: center;
@@ -639,8 +650,7 @@
     border-radius: 30px;
     cursor: pointer;
     height: 51px;
-    margin-left: 29px;
-    margin-right: 31px;
+    width: 100%;
 	}
 
 	.link-checkout {
