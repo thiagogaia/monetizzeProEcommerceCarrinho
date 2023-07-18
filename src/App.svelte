@@ -26,8 +26,8 @@
     produtos: []
   }
 
-  // import { onMount } from 'svelte'
-  import dataProducts from './data/products'
+  import { onMount } from 'svelte'
+  // import dataProducts from './data/products'
   import clickOutside from './lib/clickOutside'
   import { cart } from './lib/cart'
   import { cartIcon, closeIcon, arrowRightIcon, minusCircleIcon ,plusCircleIcon } from './data/icons'
@@ -157,10 +157,15 @@
 		return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(number)
 	}
 
-  /* let allMounted = false
-  onMount(() => {
-    allMounted = true
-  }) */
+  let dataProducts = []
+  onMount( async () => {
+    try {
+      let fetchJson = await fetch('data/products.json').then(res => res.json());
+      dataProducts = fetchJson.dataProducts
+    } catch(e) {
+      console.log(e)
+    }    
+  })
 </script>
 <!-- <pre style="width: 100%; overflow: hidden;">
   {JSON.stringify($cart, null, 2)}
