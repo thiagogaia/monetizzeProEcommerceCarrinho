@@ -1,4 +1,4 @@
-<svelte:options tag="monetizzeecommerce-pro" />
+<svelte:options tag="monetizzecarrinhoflutuante-pro" />
 <script>
   /* let watchButton = document.getElementsByClassName('monetizzeEcommercePro')
   
@@ -10,12 +10,12 @@
   for (let i = 0; i < watchButton.length; i++) {
     watchButton[i].addEventListener('click', addProduct, false);
   } */
-  const X_CONSUMER_KEY = "DegJLU5M3uSQAhGTP7cbRH3twbj8COrD"
-  const apiUrl = "http://api.local/2.1"
-  const txtCheckout = "KHF1421"
+  export let x_consumer_key
+  export let t_checkout
+  const apiUrl = "https://api.monetizze.com.br/2.1"
 
   let bodyRequest = {
-    checkout: txtCheckout,
+    checkout: t_checkout,
     tempo_expiracao: 20000,
     valor_soma_produtos: 0,
     valor_desconto: 0,
@@ -66,7 +66,7 @@
   async function getAccessToken() {
     try {
       let myHeaders = new Headers()
-      myHeaders.append("X_CONSUMER_KEY", X_CONSUMER_KEY)
+      myHeaders.append("X_CONSUMER_KEY", x_consumer_key)
       let requestOptions = {
         method: 'GET',
         headers: myHeaders
@@ -131,6 +131,9 @@
     bodyRequest.valor_soma_produtos = $cart.totalPrice
     bodyRequest.valor_total = $cart.totalPrice
 
+    bodyRequest.valor_soma_produtos = (Math.round(bodyRequest.valor_soma_produtos*100))/100
+    bodyRequest.valor_total = (Math.round(bodyRequest.valor_total*100))/100
+
     bodyRequest.valor_soma_produtos.toFixed(2)
     bodyRequest.valor_total.toFixed(2)
 
@@ -159,6 +162,7 @@
 
   let dataProducts = []
   onMount( async () => {
+    console.log(x_consumer_key, t_checkout)
     try {
       let fetchJson = await fetch('data/products.json').then(res => res.json());
       dataProducts = fetchJson.dataProducts
